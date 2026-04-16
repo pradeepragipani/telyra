@@ -1,0 +1,12 @@
+<div class="pagination-area">
+  <a (click)="previousPage()" class="page-numbers page-number-prev">
+    Previous
+  </a>
+  <a *ngFor="let page of pages" (click)="goToPage(page)" [ngClass]=" page == currentPage ? 'page-number-current' : '' "
+    class="page-numbers">
+    {{ page }}
+  </a>
+  <a (click)="nextPage()" class="page-numbers page-number-next">
+    Next
+  </a>
+</div>

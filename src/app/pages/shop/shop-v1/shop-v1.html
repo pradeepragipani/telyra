@@ -31,11 +31,12 @@
         <app-layout-one [productList]="itemsList" [classList]="'max-w-[1720px] mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 sm:gap-8 pt-8 md:pt-[50px]'"/>
 
         <!-- <div class="text-center mt-7 md:mt-12" *ngIf="allProducts.length && itemsList.length < allProducts.length"> -->
-        <div class="text-center mt-7 md:mt-12" *ngIf="itemsList.length">
+        <!-- <div class="text-center mt-7 md:mt-12" *ngIf="itemsList.length">
             <a class="btn btn-outline" data-text="Load More" (click)="loadMore()">
                 <span>Load More</span>
             </a>
-        </div>
+        </div> -->
+        <app-pagination [currentPage]="page" [totalPages]="noOfPages" (pageChange)="pageChange($event)" />
     </div>
 </div>
 

@@ -9,6 +9,7 @@ import { FooterOne } from "../../../components/footer/footer-one/footer-one";
 import { ApiService } from '../../../services/api.service';
 import { FormsModule } from '@angular/forms';
 import { GlobalService } from '../../../services/global.service';
+import { PaginationComponent } from '../../../shared/pagination/pagination.component';
 
 
 
@@ -29,6 +30,7 @@ interface ProductList{
     NavbarOne,
     LayoutOne,
     FooterOne,
+    PaginationComponent,
 ],
   templateUrl: './shop-v1.html',
   styleUrl: './shop-v1.css'

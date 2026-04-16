@@ -18144,3 +18144,43 @@ body.quick-view-popup-overlay::before{
 .float-right {
   float: right !important;
 }
+
+/* Pagination */
+.pagination-area {
+  margin-top: 20px;
+  padding-top: 30px;
+  text-align: center;
+  border-top: 1px solid #eeeeee;
+}
+
+.page-numbers {
+  cursor: pointer;
+  width: 40px;
+  height: 40px;
+  line-height: 43px;
+  text-align: center;
+  position: relative;
+  border-radius: 5px;
+  display: inline-block;
+  color: var(--titleColor);
+  background-color: #fff;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.07);
+  font-size: 16px;
+  font-weight: 600;
+  margin-left: 5px;
+  margin-right: 5px;
+  }
+.page-numbers:hover {
+  background-color: #a0a0a0;
+  color: #fff;
+}
+.page-number-current {
+  background-color: #d8d8d8;
+  color: #fff;
+}
+.page-number-prev {
+  width: 90px !important;
+}
+.page-number-next {
+  width: 90px !important;
+}
