@@ -1,0 +1,42 @@
+ <div class="relative bg-overlay before:bg-title before:bg-opacity-95" style="background-image: url('assets/img/bg/footer.png');">
+    <div class="s-pt-100">
+        <div class="container-fluid">
+            <div class="max-w-[1722px] mx-auto flex items-start justify-between gap-10 s-pb-100 flex-wrap lg:flex-nowrap footer-wrapper">
+
+                <div class="lg:max-w-[522px] w-full sm:text-center -order-1 lg:order-none">
+                    <!-- <img class="sm:mx-auto w-[150px] sm:w-auto" [src]="'assets/img/footer-logo.svg'" alt="logo"> -->
+                    <!-- <img class="sm:mx-auto w-[150px] sm:w-auto" [src]="'assets/img/custom/Telyra.png'" alt="logo" style="width: 50px;"> -->
+                    <h4 class="leading-none mb-5 md:mb-6 text-xl text-white">Telyra Systems Private Limited</h4>
+                    <p class="mt-[15px] text-white">
+                        WeWork, K Raheja Mindspace, Survey No. 64,
+                        Building Number 9, 13th Floor, Madhapur,
+                        HYDERABAD,
+                        TELANGANA, 500081
+                    </p>
+                    <p class="mt-[15px] text-white">Mobile: +91-7661827023</p>
+                    <p class="mt-[15px] text-white">Email: 
+                        <a [href]="'mailto:telyrasystemspvtltd2025@gmail.com'">
+                            telyrasystemspvtltd2025@gmail.com
+                        </a>
+                    </p>
+                    <p class="mt-[15px] text-white">© {{year}} Telyra.</p>
+                </div>
+
+                <div class="lg:max-w-[366px] sm:w-[45%] lg:w-full flex items-start justify-between gap-10 footer-inner-wrapper">
+                    <div>
+                        <ul class="text-white leading-none flex flex-col gap-4">
+                            <li *ngFor="let item of footerLink" class="duration-100 hover:text-primary inline-block group">
+                                <a class="text-underline-primary" [routerLink]="item.link" [queryParams]="{ load: item.param }"
+                                    (click)="scrollToTop()">{{item.name}}</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="max-w-[1722px] mx-auto border-t border-white border-opacity-10 py-5 md:py-7 text-center">
+                <p class="text-white">© {{year}} Telyra. All rights reserved.</p>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,120 @@
+import { Injectable, OnInit } from "@angular/core";
+import { ToastrService } from "ngx-toastr";
+import { BehaviorSubject, Observable, Subject } from "rxjs";
+import { ApiService } from "./api.service";
+
+@Injectable({
+    providedIn: 'root'
+})
+export class GlobalService {
+
+    private loggedInUser$ = new BehaviorSubject<any>(null);
+    loggedInUserObservable: Observable<any> = this.loggedInUser$.asObservable();
+    private cartItems$: BehaviorSubject<any[]> = new BehaviorSubject<any[]>([]);
+    cartItemsObservable: Observable<any[]> = this.cartItems$.asObservable();
+    private categorySubject$ = new BehaviorSubject<any>(null);
+    categories$: Observable<any> = this.categorySubject$.asObservable();
+
+    constructor(
+        private toastr: ToastrService,
+        private apiService: ApiService,
+    ){
+        const user = localStorage.getItem('user');
+        if (user) {
+            this.loggedInUser$.next(JSON.parse(user));
+        }
+        const cartItems = JSON.parse(localStorage.getItem('cartItems') || '[]');
+        if (cartItems.length > 0) {
+            this.cartItems$.next(cartItems);
+        }
+        this.getCategoryData();
+    }
+
+    userLogin(user: any) {
+        this.loggedInUser$.next(user);
+    }
+
+    logout() {
+        localStorage.removeItem('user');
+        localStorage.removeItem('userLoginData');
+        localStorage.removeItem('addresses');
+        localStorage.removeItem('defaultAddress');
+        localStorage.removeItem('selectedAddress');
+        this.loggedInUser$.next(null);
+        setTimeout(() => {
+            window.location.href = '/';
+        }, 1500);
+        setTimeout(() => {
+            localStorage.removeItem('cartItems');
+            this.cartItems$.next([]);
+            window.location.reload();
+        }, 2500);
+    }
+
+    getCurrentUser() {
+        return this.loggedInUser$.value;
+    }
+
+    addToCart(item: any): void {
+        let cartItems = JSON.parse(localStorage.getItem('cartItems') || '[]');
+        const existingItemIndex = cartItems.findIndex((cartItem: any) => cartItem.id === item.id);
+        if (existingItemIndex !== -1) {
+            cartItems[existingItemIndex].quantity += 1;
+        } else {
+            cartItems.push({ ...item, quantity: 1 });
+        }
+        localStorage.setItem('cartItems', JSON.stringify(cartItems));
+        this.cartItems$.next(cartItems);
+    }
+    updateCartItem(item: any): void {
+        let cartItems = JSON.parse(localStorage.getItem('cartItems') || '[]');
+        const itemIndex = cartItems.findIndex((cartItem: any) => cartItem.id === item.id);
+        if (itemIndex !== -1) {
+            cartItems[itemIndex] = item;
+            localStorage.setItem('cartItems', JSON.stringify(cartItems));
+            this.cartItems$.next(cartItems);
+        }
+    }
+    removeFromCart(item: any): void {
+        let cartItems = JSON.parse(localStorage.getItem('cartItems') || '[]');
+        cartItems = cartItems.filter((cartItem: any) => cartItem.id !== item.id);
+        localStorage.setItem('cartItems', JSON.stringify(cartItems));
+        this.cartItems$.next(cartItems);
+    }
+    clearCart(): void {
+        localStorage.removeItem('cartItems');
+        this.cartItems$.next([]);
+    }
+
+    public getCategoryData() {
+        const temp = sessionStorage.getItem('Category_Data');
+        if (temp) {
+            this.categorySubject$.next(JSON.parse(temp));
+            return JSON.parse(temp);
+        } else {
+            this.apiService.postData('getCategories', { cstatus: '0' }).subscribe((res: any) => {
+                if (res.code === 0) {
+                    this.categorySubject$.next(res.categories);
+                    sessionStorage.setItem('Category_Data', JSON.stringify(res.categories));
+                    return res.categories;
+                } else {
+                    return undefined;
+                }
+            });
+        }
+    }
+
+    success(msg: string, header?: string): void {
+        this.toastr.success(msg, header || 'Success');
+    }
+    error(msg: string, header?: string): void {
+        this.toastr.error(msg, header || 'Error');
+    }
+    info(msg: string, header?: string): void {
+        this.toastr.info(msg, header || 'Info');
+    }
+    warning(msg: string, header?: string): void {
+        this.toastr.warning(msg, header || 'Warning');
+    }
+
+}
