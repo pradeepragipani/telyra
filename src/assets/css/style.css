@@ -18132,12 +18132,6 @@ body.quick-view-popup-overlay::before{
   cursor: pointer;
 }
 
-.d-flex {
-  display: flex !important;
-}
-.justify-content-between {
-  justify-content: space-between !important;
-}
 .float-left {
   float: left !important;
 }

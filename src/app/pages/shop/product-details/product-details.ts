@@ -10,6 +10,7 @@ import { productList } from '../../../data/data';
 import { FooterOne } from "../../../components/footer/footer-one/footer-one";
 import { FormsModule } from '@angular/forms';
 import { GlobalService } from '../../../services/global.service';
+import { ApiService } from '../../../services/api.service';
 
 @Component({
   selector: 'app-product-details',
@@ -28,9 +29,8 @@ import { GlobalService } from '../../../services/global.service';
 })
 export class ProductDetails {
 
-  ngAfterViewInit(): void {
-    Aos.init()
-  }
+  isLoading: boolean = false;
+  isIcon: boolean = true;
 
   productList = productList
 
@@ -52,6 +52,7 @@ export class ProductDetails {
     private cdr: ChangeDetectorRef,
     private route: ActivatedRoute,
     private globalService: GlobalService,
+    private apiService: ApiService,
   ){ }
   
   ngOnInit(): void {
@@ -59,20 +60,46 @@ export class ProductDetails {
       window.scrollTo(0, 0);
       this.id = params['id'];
       this.id = this.route.snapshot.params['id'];
-      // this.data = productList.find(item => item.id === parseInt(this.id))
-      this.data = localStorage.getItem('productData') ? JSON.parse(localStorage.getItem('productData')!) : null;
+      this.getItemDetailsById();
       this.relatedProducts = localStorage.getItem('relatedProducts') ? JSON.parse(localStorage.getItem('relatedProducts')!) : [];
-      this.globalService.cartItemsObservable.subscribe(items => {
-        const itemInCart = items.find((item: any) => item.id === this.data?.id);
-        this.isCardAdded = !!itemInCart;
-        this.data.quantity = itemInCart ? itemInCart.quantity : 0;
-      });
       this.cdr.detectChanges();
       setInterval(() => {
         this.calculateTime();
       }, 1000);
     });
   }
+  ngAfterViewInit(): void {
+    Aos.init()
+  }
+
+  getItemDetailsById(): void {
+    this.isLoading = true;
+    this.apiService.postData('getItemDetailsById',
+      { item_id: this.id }
+    ).subscribe({
+      next: (res: any) => {
+        this.isLoading = false;
+        if (res.code === 0) {
+          this.data = res.item;
+          this.isIcon = this.data.category.catname == 'Icons';
+          this.globalService.cartItemsObservable.subscribe(items => {
+            const itemInCart = items.find((item: any) => item.id === this.data?.id);
+            this.isCardAdded = !!itemInCart;
+            this.data.quantity = itemInCart ? itemInCart.quantity : 0;
+          });
+          this.cdr.detectChanges();
+        } else if (res.code == 5) {
+          this.globalService.error('Session expired');
+          // this.globalService.logout();
+        }
+      }, error: (error: any) => {
+        this.isLoading = false;
+      }, complete: () => {
+        this.isLoading = false;
+      }
+    });
+  }
+
   calculateTime() {
     const now = new Date().getTime();
     const difference = this.countdownDate.getTime() - now;

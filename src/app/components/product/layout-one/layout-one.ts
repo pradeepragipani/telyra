@@ -14,6 +14,7 @@ import { GlobalService } from '../../../services/global.service';
 })
 export class LayoutOne {
 
+  @Input() isIcons: boolean = false;
   @Input() productList: any[] = [];
   @Input() classList: any;
 

@@ -5,22 +5,27 @@
         <ul class="flex items-center gap-[10px] text-base md:text-lg leading-none font-normal text-title dark:text-white max-w-[1720px] mx-auto flex-wrap">
             <li><a [routerLink]="'/'">Home</a></li>
             <li>/</li>
-            <li><a [routerLink]="'/shop-v1'">Items</a></li>
+            <li><a [routerLink]="'/items'" *ngIf="!isIcon">Items</a></li>
+            <li><a [routerLink]="'/icons'" *ngIf="isIcon">Icons</a></li>
             <li>/</li>
             <li class="text-primary">{{data?.itemname ? data?.itemname : ''}}</li>
         </ul>
     </div>
 </div>
 
-<div class="s-py-50" data-aos="fade-up" *ngIf="data">
+<div class="s-py-50" data-aos="fade-up">
     <div class="container-fluid">
-        <div class="max-w-[1720px] mx-auto flex justify-between gap-10 flex-col lg:flex-row">
+        <div class="loader-wrapper" *ngIf="isLoading">
+            <span class="loader"></span>
+        </div>
+        <div class="max-w-[1720px] mx-auto flex justify-between gap-10 flex-col lg:flex-row" *ngIf="data">
             <div class="w-full lg:w-[58%]">
                 <div class="relative product-dtls-wrapper">
                     <button class="absolute top-5 left-0 p-2 bg-[#E13939] text-lg leading-none text-white font-medium z-50">Created by {{data?.artist?.aname}}</button>
                     <div class="product-dtls-slider ">
-                        <div [ngClass]="activeImage === 1 ? '' :'hidden'">
-                            <img [src]="data?.image_url ? data?.image_url : '/assets/img/gallery/product-detls/product-01.jpg'" class="w-full" alt="product">
+                        <div [ngClass]="activeImage === 1 ? '' :'hidden'" class="flex justify-center">
+                            <img [src]="data?.image_url ? data?.image_url : '/assets/img/gallery/product-detls/product-01.jpg'" alt="product"
+                                [ngClass]="{'w-full': !isIcon}">
                         </div>
                     </div>
                     <!-- <div class="product-dtls-slider ">
@@ -110,7 +115,7 @@
                             </svg>
                         </button>
                     </div>
-                    <div class="flex gap-4 mt-4 sm:mt-6">
+                    <div class="flex gap-4">
                         <a (click)="addToCart(data)" class="btn btn-solid" data-text="Add to Cart" *ngIf="!isCardAdded">
                             <span>Add to Cart</span>
                         </a>
@@ -216,7 +221,7 @@
     <app-detail-tab/>
 </div> -->
 
-<div class="s-py-50-100">
+<div class="s-py-50-100" *ngIf="relatedProducts.length > 0 && !isIcon">
     <div class="container-fluid">
         <div class="max-w-[547px] mx-auto text-center">
             <h6 class="text-2xl sm:text-3xl md:text-4xl leading-none">Related Items</h6>

@@ -11,16 +11,6 @@ import { FormsModule } from '@angular/forms';
 import { GlobalService } from '../../../services/global.service';
 import { PaginationComponent } from '../../../shared/pagination/pagination.component';
 
-
-
-interface ProductList{
-  id: number;
-  image: string;
-  tag: string;
-  price: string;
-  name: string;
-}
-
 @Component({
   selector: 'app-shop-v1',
   imports: [
@@ -42,17 +32,19 @@ export class ShopV1 {
   itemsList: any[] = [];
   page = 1;
   noOfPages = 0;
+  pageSize = 12;
   params: any = {};
   selectedCategory = '';
 
   constructor(
+    private cdr: ChangeDetectorRef,
     private router: Router,
     private route: ActivatedRoute,
     private apiService: ApiService,
     private globalService: GlobalService,
   ) {
     this.globalService.categories$.subscribe((res: any) => this.categoryList = res ? res : []);
-    route.queryParams.subscribe((res: any) => {
+    this.route.queryParams.subscribe((res: any) => {
       this.params = res;
       if (this.params['category']) {
         this.page = 1;
@@ -70,13 +62,14 @@ export class ShopV1 {
     this.isLoading = true;
     this.itemsList = [];
     this.apiService.postData('getItemsByCategory',
-      { cat_ids: this.selectedCategory, page: this.page, per_page: 12 }
+      { cat_ids: this.selectedCategory, page: this.page, per_page: this.pageSize }
     ).subscribe({
       next: (res: any) => {
         this.isLoading = false;
         if (res.code === 0) {
           this.itemsList = res.items;
           this.noOfPages = res.pages;
+          this.cdr.detectChanges();
         } else if (res.code == 5) {
           this.globalService.error('Session expired');
           // this.globalService.logout();
@@ -98,9 +91,5 @@ export class ShopV1 {
     window.scrollTo(0,0);
     this.page = val;
     this.getItems();
-  }
-
-  loadMore() {
-
   }
 }

@@ -5,11 +5,11 @@
                 <img class="w-full transform group-hover:scale-110 duration-300" [src]="item.image_url" alt="shop">
             </a>
 
-            <div *ngIf="item?.artist?.aname" class="absolute z-10 top-7 left-7 pt-[10px] pb-2 px-3 bg-[#E13939] rounded-[30px] font-primary text-[14px] text-white font-semibold leading-none">
+            <div *ngIf="!isIcons && item?.artist?.aname" class="absolute z-10 top-7 left-7 pt-[10px] pb-2 px-3 bg-[#E13939] rounded-[30px] font-primary text-[14px] text-white font-semibold leading-none">
                 Created by {{item.artist.aname}}
             </div>
         
-            <div *ngIf="item?.category?.catname" class="absolute z-10 bottom-7 left-7 pt-[10px] pb-2 px-3 bg-[#9739E1] rounded-[30px] font-primary text-[14px] text-white font-semibold leading-none">
+            <div *ngIf="!isIcons && item?.category?.catname" class="absolute z-10 bottom-7 left-7 pt-[10px] pb-2 px-3 bg-[#9739E1] rounded-[30px] font-primary text-[14px] text-white font-semibold leading-none">
                 Category: {{item.category.catname}}
             </div>
             <!-- <div class="absolute z-10 top-7 left-7 pt-[10px] pb-2 px-3 bg-[#1CB28E] rounded-[30px] font-primary text-[14px] text-white font-semibold leading-none">
