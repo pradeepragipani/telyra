@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { footerLink } from '../../../data/nav-data';
 import { ApiService } from '../../../services/api.service';
@@ -21,12 +21,36 @@ export class FooterOne {
 
   year: any
 
-  constructor(private apiService: ApiService) { }
+  apiData: any;
+
+  constructor(
+    private cdr: ChangeDetectorRef,
+    private apiService: ApiService
+  ) { }
 
   ngOnInit(): void {
-    this.year = new Date().getFullYear()
+    this.year = new Date().getFullYear();
+    let address = sessionStorage.getItem('ofc-address');
+    if (address) {
+      this.apiData = JSON.parse(address);
+      this.cdr.detectChanges();
+    } else {
+      this.loadApiData();
+    }
   }
 
+  loadApiData(): void {
+    this.apiService.postData('getAppMasterData', {}).subscribe({
+      next: (data) => {
+        this.apiData = data.data;
+        sessionStorage.setItem('ofc-address', JSON.stringify(this.apiData));
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        console.error('Error loading API data', error);
+      }
+    });
+  }
   scrollToTop() {
     window.scroll(0, 0);
   }

@@ -1,9 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { NavbarOne } from "../../../components/navbar/navbar-one/navbar-one";
 import Aos from 'aos';
 import { FooterOne } from "../../../components/footer/footer-one/footer-one";
+import { ApiService } from '../../../services/api.service';
 
 @Component({
   selector: 'app-contact',
@@ -18,10 +19,34 @@ import { FooterOne } from "../../../components/footer/footer-one/footer-one";
 })
 export class Contact {
 
-  constructor() { }
+  isLoading: boolean = false;
+  apiData: any;
+
+  constructor(
+    private cdr: ChangeDetectorRef,
+    private apiService: ApiService
+  ) { }
 
   ngOnInit(): void {
     Aos.init();
+    this.loadApiData();
+  }
+
+  loadApiData(): void {
+    this.isLoading = true;
+    this.apiService.postData('getAppMasterData', {}).subscribe({
+      next: (data) => {
+        this.isLoading = false;
+        this.apiData = data.data;
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        this.isLoading = false;
+        console.error('Error loading API data', error);
+      }, complete: () => {
+        this.isLoading = false;
+      }
+    });
   }
 
 }

@@ -1,9 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { NavbarOne } from "../../../components/navbar/navbar-one/navbar-one";
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import Aos from 'aos';
 import { FooterOne } from "../../../components/footer/footer-one/footer-one";
+import { ApiService } from '../../../services/api.service';
 import { FormsModule } from '@angular/forms';
 
 @Component({
@@ -20,10 +21,14 @@ import { FormsModule } from '@angular/forms';
 })
 export class TermsAndConditions {
   
+  isLoading: boolean = false;
   load: any;
+  apiData: any;
 
   constructor(
+    private cdr: ChangeDetectorRef,
     private route: ActivatedRoute,
+    private apiService: ApiService
   ) { }
 
   ngOnInit(): void {
@@ -31,6 +36,25 @@ export class TermsAndConditions {
     this.route.queryParams.subscribe(params => {
       if (params['load']) {
         this.load = params['load'];
+      }
+    });
+    this.loadApiData();
+  }
+
+  loadApiData(): void {
+    this.isLoading = true;
+    this.apiService.postData('getAppMasterData', {}).subscribe({
+      next: (data) => {
+        window.scrollTo(0, 0);
+        this.isLoading = false;
+        this.apiData = data.data;
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        console.error('Error loading API data', error);
+        this.isLoading = false;
+      }, complete: () => {
+        this.isLoading = false;
       }
     });
   }

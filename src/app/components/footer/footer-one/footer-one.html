@@ -3,22 +3,11 @@
         <div class="container-fluid">
             <div class="max-w-[1722px] mx-auto flex items-start justify-between gap-10 s-pb-100 flex-wrap lg:flex-nowrap footer-wrapper">
 
-                <div class="lg:max-w-[522px] w-full sm:text-center -order-1 lg:order-none">
-                    <!-- <img class="sm:mx-auto w-[150px] sm:w-auto" [src]="'assets/img/footer-logo.svg'" alt="logo"> -->
-                    <!-- <img class="sm:mx-auto w-[150px] sm:w-auto" [src]="'assets/img/custom/Telyra.png'" alt="logo" style="width: 50px;"> -->
-                    <h4 class="leading-none mb-5 md:mb-6 text-xl text-white">Telyra Systems Private Limited</h4>
-                    <p class="mt-[15px] text-white">
-                        WeWork, K Raheja Mindspace, Survey No. 64,
-                        Building Number 9, 13th Floor, Madhapur,
-                        HYDERABAD,
-                        TELANGANA, 500081
-                    </p>
-                    <p class="mt-[15px] text-white">Mobile: +91-7661827023</p>
-                    <p class="mt-[15px] text-white">Email: 
-                        <a [href]="'mailto:telyrasystemspvtltd2025@gmail.com'">
-                            telyrasystemspvtltd2025@gmail.com
-                        </a>
-                    </p>
+                <div class="lg:max-w-[522px] w-full sm:text-center -order-1 lg:order-none" *ngIf="apiData">
+                    <h4 class="leading-none mb-5 md:mb-6 text-xl text-white">{{apiData.companyname}}</h4>
+                    <p class="mt-[15px] text-white" [innerHTML]="apiData.address"></p>
+                    <p class="mt-[15px] text-white">Mobile: {{apiData.contactnumber}}</p>
+                    <p class="mt-[15px] text-white">Email: {{apiData.emailid}}</p>
                     <p class="mt-[15px] text-white">© {{year}} Telyra.</p>
                 </div>
 

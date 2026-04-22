@@ -1,20 +1,11 @@
  <div class="s-pt-100 2xl:pb-[100px]">
     <div class="container max-w-auto mx-auto">
         <div class="flex flex-col 2xl:flex-row items-start justify-between gap-10">
-            <div class="max-w-[400px] 2xl:max-w-[400px] w-full text-left sm:text-center 2xl:text-left sm:mx-auto 2xl:mx-0">
-                <h4 class="leading-none mb-5 md:mb-6 text-xl">Telyra Systems Private Limited</h4>
-                <p class="mt-[15px]">
-                    WeWork, K Raheja Mindspace, Survey No. 64,
-                    Building Number 9, 13th Floor, Madhapur,
-                    HYDERABAD,
-                    TELANGANA, 500081
-                </p>
-                <p class="mt-[15px]">Mobile: +91-7661827023</p>
-                <p class="mt-[15px]">Email:
-                    <a [href]="'mailto:telyrasystemspvtltd2025@gmail.com'">
-                        telyrasystemspvtltd2025@gmail.com
-                    </a>
-                </p>
+            <div class="max-w-[500px] 2xl:max-w-[500px] w-full text-left sm:text-center 2xl:text-left sm:mx-auto 2xl:mx-0">
+                <h4 class="leading-none mb-5 md:mb-6 text-xl">{{apiData.companyname}}</h4>
+                <p class="mt-[15px]" [innerHTML]="apiData.address"></p>
+                <p class="mt-[15px]">Mobile: {{apiData.contactnumber}}</p>
+                <p class="mt-[15px]">Email: {{apiData.emailid}}</p>
                 <p class="mt-[15px]">© {{year}} Telyra.</p>
             </div>
             <div class="grid grid-cols-1">
