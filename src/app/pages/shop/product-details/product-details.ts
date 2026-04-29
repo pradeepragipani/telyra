@@ -11,6 +11,7 @@ import { FooterOne } from "../../../components/footer/footer-one/footer-one";
 import { FormsModule } from '@angular/forms';
 import { GlobalService } from '../../../services/global.service';
 import { ApiService } from '../../../services/api.service';
+import { DisableRightClickDirective } from '../../../directives/disable-right-click.directive';
 
 @Component({
   selector: 'app-product-details',
@@ -22,7 +23,8 @@ import { ApiService } from '../../../services/api.service';
     IncDec,
     DetailTab,
     LayoutOne,
-    FooterOne
+    FooterOne,
+    DisableRightClickDirective
 ],
   templateUrl: './product-details.html',
   styleUrl: './product-details.css'

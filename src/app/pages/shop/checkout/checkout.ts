@@ -90,38 +90,7 @@ export class Checkout {
       next: (res: any) => {
         this.checkoutDisable = false;
         if (res.code === 0) {
-          this.orderId = res.response;
-          this.makingPayment = true;
-          const paymentData = {
-            amount: this.cartTotal,
-            order_id: res.order_id
-          };
-
-          this.apiService.postDataWithHeaders('createPayment', paymentData, {
-            Authorization: 'Bearer ' + this.userData.auth_token,
-          }).subscribe({
-            next: (payRes: any) => {
-              this.makingPayment = false;
-              if (payRes.code === 0) {
-                this.globalService.success(payRes.message);
-                this.globalService.clearCart();
-                this.router.navigate(['/qr-payment'], {
-                  queryParams: {
-                    qrCode: payRes.shortURL,
-                  }
-                });
-              } else {
-                this.globalService.error('Payment failed. Try again');
-              }
-              this.cdr.detectChanges();
-            }, error: (error) => {
-              this.makingPayment = false;
-              this.cdr.detectChanges();
-            }, complete: () => {
-              this.makingPayment = false;
-              this.cdr.detectChanges();
-            }
-          });
+          this.createPayment(res);
         } else if (res.code === 5) {
           this.globalService.logout();
           this.router.navigate(['/login']);
@@ -139,4 +108,43 @@ export class Checkout {
     });
   }
 
+  createPayment(res: any): void {
+    this.orderId = res.response;
+    this.makingPayment = true;
+    const paymentData = {
+      amount: this.cartTotal,
+      order_id: res.order_id
+    };
+
+    this.apiService.postDataWithHeaders('createPayment', paymentData, {
+      Authorization: 'Bearer ' + this.userData.auth_token,
+    }).subscribe({
+      next: (payRes: any) => {
+        this.makingPayment = false;
+        if (payRes.code === 0) {
+          this.globalService.success(payRes.message);
+          this.globalService.clearCart();
+          this.router.navigate(['/qr-payment'], {
+            queryParams: {
+              qrCode: payRes.shortURL,
+            }
+          });
+        } else if (payRes.code === 2) {
+          this.globalService.warning(payRes.message);
+          setTimeout(() => {
+            this.router.navigate(['/']);
+          }, 500);
+        } else {
+          this.globalService.error('Payment failed. Try again');
+        }
+        this.cdr.detectChanges();
+      }, error: (error) => {
+        this.makingPayment = false;
+        this.cdr.detectChanges();
+      }, complete: () => {
+        this.makingPayment = false;
+        this.cdr.detectChanges();
+      }
+    });
+  }
 }

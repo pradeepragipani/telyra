@@ -24,7 +24,7 @@
                     <button class="absolute top-5 left-0 p-2 bg-[#E13939] text-lg leading-none text-white font-medium z-50">Created by {{data?.artist?.aname}}</button>
                     <div class="product-dtls-slider ">
                         <div [ngClass]="activeImage === 1 ? '' :'hidden'" class="flex justify-center">
-                            <img [src]="data?.image_url ? data?.image_url : '/assets/img/gallery/product-detls/product-01.jpg'" alt="product"
+                            <img disableRightClick [src]="data?.image_url ? data?.image_url : '/assets/img/gallery/product-detls/product-01.jpg'" alt="product"
                                 [ngClass]="{'w-full': !isIcon}">
                         </div>
                     </div>
