@@ -1,7 +1,7 @@
 {
-  "name": "telyra",
+  "name": "chedan",
   "version": "1.2.0",
-  "description": "Telyra - Online Store",
+  "description": "Chedan - Online Store",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",

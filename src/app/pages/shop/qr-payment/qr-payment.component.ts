@@ -41,19 +41,22 @@ export class QrPaymentComponent implements OnInit, OnDestroy {
         this.qrCodeStr = params['qrCode'];
         this.pageTitle = 'Scan QR Code to Pay';
 
-        this.sub = interval(1000)
-          .pipe(take(60))
-          .subscribe(() => {
-            this.countdown--;
-            this.cdr.detectChanges();
+        this.globalService.warning("Payment integration is pending");
 
-            if (this.countdown === 0) {
-              this.router.navigate(['/']);
-            }
-          });
-        setTimeout(() => {
-          this.checkTransactionStatus();
-        }, 60000);
+        // this.sub = interval(1000)
+        //   .pipe(take(60))
+        //   .subscribe(() => {
+        //     this.countdown--;
+        //     this.cdr.detectChanges();
+
+        //     if (this.countdown === 0) {
+        //       this.router.navigate(['/']);
+        //     }
+        //   });
+        // setTimeout(() => {
+        //   this.checkTransactionStatus();
+        // }, 60000);
+        this.cdr.detectChanges();
       } else {
         this.globalService.error("Unable to process the payment");
         setTimeout(() => {

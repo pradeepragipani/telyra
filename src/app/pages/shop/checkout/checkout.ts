@@ -6,8 +6,7 @@ import Aos from 'aos';
 import { FooterOne } from "../../../components/footer/footer-one/footer-one";
 import { GlobalService } from '../../../services/global.service';
 import { ApiService } from '../../../services/api.service';
-import { EncryptDecryptService } from '../../../services/encrypt-decrypt.service';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-checkout',
@@ -40,11 +39,9 @@ export class Checkout {
 
   constructor(
     private cdr: ChangeDetectorRef,
-    private fb: FormBuilder,
     private router: Router,
     private globalService: GlobalService,
     private apiService: ApiService,
-    private encryptService: EncryptDecryptService,
   ) { }
 
   ngOnInit(): void {
@@ -96,7 +93,7 @@ export class Checkout {
           this.orderId = res.response;
           this.makingPayment = true;
           const paymentData = {
-            amount: this.cartTotal.toString(),
+            amount: this.cartTotal,
             order_id: res.order_id
           };
 
@@ -116,10 +113,13 @@ export class Checkout {
               } else {
                 this.globalService.error('Payment failed. Try again');
               }
+              this.cdr.detectChanges();
             }, error: (error) => {
               this.makingPayment = false;
+              this.cdr.detectChanges();
             }, complete: () => {
               this.makingPayment = false;
+              this.cdr.detectChanges();
             }
           });
         } else if (res.code === 5) {
@@ -131,8 +131,10 @@ export class Checkout {
         }
       }, error: (error) => {
         this.checkoutDisable = false;
+        this.cdr.detectChanges();
       }, complete: () => {
         this.checkoutDisable = false;
+        this.cdr.detectChanges();
       }
     });
   }

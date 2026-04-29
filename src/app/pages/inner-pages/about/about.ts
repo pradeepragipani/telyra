@@ -4,10 +4,10 @@ import { RouterLink } from '@angular/router';
 import { NavbarOne } from "../../../components/navbar/navbar-one/navbar-one";
 import Aos from 'aos';
 import { CarouselModule } from 'ngx-owl-carousel-o';
-import { featureOne } from '../../../data/data';
 import { PartnerOne } from "../../../components/partner/partner-one/partner-one";
 import { FooterOne } from "../../../components/footer/footer-one/footer-one";
-import { ApiService } from '../../../services/api.service';
+import { GlobalService } from '../../../services/global.service';
+import { featureOne } from '../../../data/data';
 
 @Component({
   selector: 'app-about',
@@ -26,43 +26,21 @@ export class About {
 
   isLoading: boolean = false;
   apiData: any;
+  open:boolean = false;
+  feature = featureOne;
 
   constructor(
     private cdr: ChangeDetectorRef,
-    private apiService: ApiService
+    private globalService: GlobalService,
   ) {}
 
   ngOnInit(): void {
     Aos.init();
-    this.loadApiData();
-  }
-
-  loadApiData(): void {
-    this.isLoading = true;
-    this.apiService.postData('getAppMasterData', {}).subscribe({
-      next: (data) => {
-        this.isLoading = false;
-        this.apiData = data.data;
+    this.globalService.masterDataObs.subscribe((data: any) => {
+      if (data) {
+        this.apiData = data;
         this.cdr.detectChanges();
-      },
-      error: (error) => {
-        console.error('Error loading API data', error);
-        this.isLoading = false;
-      }, complete: () => {
-        this.isLoading = false;
       }
     });
-  }
-
-  open:boolean = false
-
-  feature = featureOne
-
-  customOptions = {
-    loop: true,
-    margin: 10,
-    nav: false,
-    items:1,
-    dots:true
   }
 }

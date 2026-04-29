@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { NavbarOne } from "../../../components/navbar/navbar-one/navbar-one";
 import Aos from 'aos';
@@ -25,10 +25,18 @@ import { GlobalService } from '../../../services/global.service';
 export class Register {
 
   isLoading: boolean = false;
+  otpLoading: boolean = false;
   registerForm!: FormGroup;
+  otpForm!: FormGroup;
   passwdStrength = false;
+  otpModalOpen = false;
+  otpMessage = 'Enter the 6-digit OTP sent to your email or mobile number.';
+  otpSuccessText = '';
+  registrationReference: { email?: string; cnumber?: string } = {};
+  tokenKey: string = '';
 
   constructor(
+    private cdr: ChangeDetectorRef,
     private fb: FormBuilder,
     private router: Router,
     private globalService: GlobalService,
@@ -49,6 +57,14 @@ export class Register {
       password: ['', Validators.required],
       confirmPassword: ['', Validators.required]
     });
+
+    this.initOtpForm();
+  }
+
+  initOtpForm() {
+    this.otpForm = this.fb.group({
+      otp: ['', [Validators.required, Validators.pattern(/^\d{6}$/)]]
+    });
   }
 
   passwordsMismatch(): boolean {
@@ -65,7 +81,7 @@ export class Register {
     const { username, password, cnumber, email_id } = this.registerForm.value;
     this.apiService.postData('userRegistration', {
       username: this.encryptService.set(username),
-      upassword: this.encryptService.set(password),
+      password: this.encryptService.set(password),
       cnumber: this.encryptService.set(cnumber),
       email_id: this.encryptService.set(email_id),
     }).subscribe({
@@ -73,17 +89,27 @@ export class Register {
         this.isLoading = false;
         if (res.code === 0) {
           this.globalService.success(res.message);
+          this.tokenKey = res.userDetails.auth_token;
+          this.registrationReference = {
+            email: email_id,
+            cnumber
+          };
+          this.otpModalOpen = true;
+          this.otpMessage = 'A 6-digit verification code has been sent. Please enter it to complete registration.';
           this.registerForm.reset();
-          this.router.navigate(['/login']);
+          this.initOtpForm();
         } else {
           this.globalService.error(res.message);
         }
+        this.cdr.detectChanges();
       }, error: (err) => {
         this.isLoading = false;
         this.globalService.error('An error occurred. Please try again.');
         console.error('Registration error:', err);
+        this.cdr.detectChanges();
       }, complete: () => {
         this.isLoading = false;
+        this.cdr.detectChanges();
       }
     });
   }
@@ -98,6 +124,57 @@ export class Register {
     this.passwdStrength = !(passwd.length > 7 && upper && lower && number && special);
 
     this.registerForm.patchValue({ password: passwd });
+  }
+
+  handleVerifyOtp() {
+    if (this.otpForm.invalid) {
+      this.otpForm.markAllAsTouched();
+      return;
+    }
+
+    this.otpLoading = true;
+    const otp = this.otpForm.value.otp;
+
+    const payload: any = {
+      otp: otp
+    };
+
+    if (this.registrationReference.email) {
+      payload.email_id = this.encryptService.set(this.registrationReference.email);
+    }
+
+    if (this.registrationReference.cnumber) {
+      payload.cnumber = this.encryptService.set(this.registrationReference.cnumber);
+    }
+
+    this.apiService.postDataWithHeaders(
+      'validateOtp', payload, { 'Authorization': `Bearer ${this.tokenKey}` }
+    ).subscribe({
+      next: (res: any) => {
+        // this.otpLoading = false;
+        if (res.code === 0) {
+          this.otpSuccessText = res.message || 'OTP verified successfully. Redirecting to login...';
+          this.globalService.success(this.otpSuccessText);
+          setTimeout(() => this.router.navigate(['/login']), 2500);
+        } else {
+          this.globalService.error(res.message || 'OTP verification failed.');
+        }
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        this.otpLoading = false;
+        this.globalService.error('OTP verification failed. Please try again.');
+        console.error('OTP verification error:', err);
+        this.cdr.detectChanges();
+      }, complete: () => {
+        this.otpLoading = false;
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  closeOtpModal() {
+    this.otpModalOpen = false;
   }
 
   // ---------------- UI HELPERS ----------------

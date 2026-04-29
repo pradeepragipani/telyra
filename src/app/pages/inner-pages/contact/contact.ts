@@ -4,7 +4,7 @@ import { RouterLink } from '@angular/router';
 import { NavbarOne } from "../../../components/navbar/navbar-one/navbar-one";
 import Aos from 'aos';
 import { FooterOne } from "../../../components/footer/footer-one/footer-one";
-import { ApiService } from '../../../services/api.service';
+import { GlobalService } from '../../../services/global.service';
 
 @Component({
   selector: 'app-contact',
@@ -24,27 +24,15 @@ export class Contact {
 
   constructor(
     private cdr: ChangeDetectorRef,
-    private apiService: ApiService
-  ) { }
+    private globalService: GlobalService,
+  ) {}
 
   ngOnInit(): void {
     Aos.init();
-    this.loadApiData();
-  }
-
-  loadApiData(): void {
-    this.isLoading = true;
-    this.apiService.postData('getAppMasterData', {}).subscribe({
-      next: (data) => {
-        this.isLoading = false;
-        this.apiData = data.data;
+    this.globalService.masterDataObs.subscribe((data: any) => {
+      if (data) {
+        this.apiData = data;
         this.cdr.detectChanges();
-      },
-      error: (error) => {
-        this.isLoading = false;
-        console.error('Error loading API data', error);
-      }, complete: () => {
-        this.isLoading = false;
       }
     });
   }

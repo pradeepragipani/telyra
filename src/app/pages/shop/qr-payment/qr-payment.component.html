@@ -1,7 +1,6 @@
 <app-navbar-one />
 
-<div class="flex items-center gap-4 flex-wrap bg-overlay p-14 sm:p-16 before:bg-title before:bg-opacity-70"
-    style="background-image:url('assets/img/shortcode/breadcumb.jpg');">
+<div class="flex items-center gap-4 flex-wrap bg-overlay p-14 sm:p-16 before:bg-title before:bg-opacity-70">
     <div class="text-center w-full">
         <h2 class="text-white text-8 md:text-[40px] font-normal leading-none text-center">Payment</h2>
         <ul
@@ -18,13 +17,16 @@
         <div class="max-w-[1220px] mx-auto grid lg:grid-cols-2 gap-[30px] lg:gap-[70px]">
             <div class="bg-[#FAFAFA] dark:bg-dark-secondary p-[30px] md:p-[40px] lg:p-[50px] border border-[#17243026] border-opacity-15 rounded-xl"
                 data-aos="fade-up">
-                <qrcode [qrdata]="qrCodeStr" [width]="300" [errorCorrectionLevel]="'M'">
+                <!-- <qrcode [qrdata]="qrCodeStr" [width]="300" [errorCorrectionLevel]="'M'">
                 </qrcode>
                 <div class="m-3">
                     <h5>Please Scan and Make Payment</h5>
                 </div>
                 <div class="m-2">
                     <p>QR Code Expires in: {{ countdown }} Seconds</p>
+                </div> -->
+                <div class="m-3">
+                    <h5>Payment integration is pending</h5>
                 </div>
             </div>
         </div>

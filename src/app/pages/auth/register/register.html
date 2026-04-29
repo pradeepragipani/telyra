@@ -1,17 +1,14 @@
 <app-navbar-one />
 
-<div class="flex">
-    <div class="w-1/2 hidden md:block lg:flex-1">
+<div class="flex bg-[#EBEBEB]">
+    <!-- <div class="w-1/2 hidden md:block lg:flex-1">
         <img class="h-full object-cover" [src]="'assets/img/custom/new.png'" alt="register">
-    </div>
+    </div> -->
     <div
-        class="w-full md:w-1/2 lg:max-w-lg xl:max-w-3xl lg:w-full py-16 px-[20px] sm:px-8 lg:p-16 xl:p-24 relative z-10 flex items-center overflow-hidden">
+        class="w-full py-16 px-[20px] sm:px-8 lg:p-16 xl:p-24 relative z-10 flex items-center justify-center overflow-hidden">
         <div class="mx-auto md:mx-0 max-w-md">
             <form [formGroup]="registerForm" (ngSubmit)="handleRegister()">
                 <h2 class="leading-none" data-aos="fade-up">Create New Account</h2>
-                <p class="text-lg mt-[15px]" data-aos="fade-up" data-aos-delay="100">
-                    Buy & sale your exclusive product only on Furnixar
-                </p>
                 <div class="mt-7" data-aos="fade-up" data-aos-delay="200">
                     <label class="text-base sm:text-lg font-medium leading-none mb-2.5 block dark:text-white">
                         User Name
@@ -29,10 +26,10 @@
                         class="text-base sm:text-lg font-medium leading-none mb-2.5 block dark:text-white">Email ID</label>
                     <input
                         class="w-full h-12 md:h-14 bg-white dark:bg-transparent border border-bdr-clr focus:border-primary p-4 outline-none duration-300"
-                        type="text" placeholder="Enter your Email ID" formControlName="cnumber">
-                    <span class="text-red-500 text-sm" *ngIf="registerForm.get('cnumber')?.touched && registerForm.get('cnumber')?.invalid">
-                        <span *ngIf="registerForm.get('cnumber')?.errors?.['required']">Email ID is required.</span>
-                        <span *ngIf="registerForm.get('cnumber')?.errors?.['pattern']">Email ID must be a valid 10-digit number.</span>
+                        type="text" placeholder="Enter your Email ID" formControlName="email_id">
+                    <span class="text-red-500 text-sm" *ngIf="registerForm.get('email_id')?.touched && registerForm.get('email_id')?.invalid">
+                        <span *ngIf="registerForm.get('email_id')?.errors?.['required']">Email ID is required.</span>
+                        <span *ngIf="registerForm.get('email_id')?.errors?.['pattern']">Email ID must be a valid email address.</span>
                     </span>
                 </div>
                 <div class="mt-5" data-aos="fade-up" data-aos-delay="300">
@@ -84,7 +81,7 @@
                         <span *ngIf="passwordsMismatch()">Passwords do not match.</span>
                     </span>
                 </div>
-                <div class="mt-7" data-aos="fade-up" data-aos-delay="500">
+                <!-- <div class="mt-7" data-aos="fade-up" data-aos-delay="500">
                     <label class="flex items-center gap-2 iam-agree">
                         <input class="appearance-none hidden" type="checkbox" name="rememberMe">
                         <span
@@ -99,7 +96,7 @@
                             class="text-base sm:text-lg text-title dark:text-white leading-none sm:leading-none select-none inline-block transform translate-y-[3px]">Remember
                             Me</span>
                     </label>
-                </div>
+                </div> -->
                 <div data-aos="fade-up" data-aos-delay="600">
                     <button type="submit" class="btn btn-theme-solid mt-[15px]" [attr.data-text]="isLoading ? 'Registering...' : 'Register'" [disabled]="isLoading">
                         <span *ngIf="!isLoading">Register</span>
@@ -110,6 +107,30 @@
                         [routerLink]="'/login'" class="text-primary font-medium ml-1 inline-block">Login</a></p>
             </form>
         </div>
+    </div>
+</div>
+
+<div class="otp-modal-overlay" *ngIf="otpModalOpen">
+    <div class="otp-modal" role="dialog" aria-modal="true" aria-labelledby="otpModalTitle">
+        <button type="button" class="otp-modal-close" aria-label="Close OTP modal" (click)="closeOtpModal()">×</button>
+        <h3 id="otpModalTitle">Verify Your Account</h3>
+        <p class="otp-modal-text">{{ otpMessage }}</p>
+        <form [formGroup]="otpForm" (ngSubmit)="handleVerifyOtp()">
+            <label class="otp-modal-label" for="otpInput">6-digit OTP</label>
+            <input id="otpInput" type="text" inputmode="numeric" maxlength="6" autocomplete="one-time-code"
+                formControlName="otp" class="otp-modal-input" placeholder="Enter OTP">
+            <span class="text-red-500 text-sm" *ngIf="otpForm.get('otp')?.touched && otpForm.get('otp')?.invalid">
+                <span *ngIf="otpForm.get('otp')?.errors?.['required']">OTP is required.</span>
+                <span *ngIf="otpForm.get('otp')?.errors?.['pattern']">OTP must be a 6-digit number.</span>
+            </span>
+            <div class="otp-modal-actions">
+                <button type="submit" class="btn btn-theme-solid" [disabled]="otpLoading" [attr.data-text]="otpLoading ? 'Verifying...' : 'Verify OTP'">
+                    <span *ngIf="!otpLoading">Verify OTP</span>
+                    <span *ngIf="otpLoading">Verifying...</span>
+                </button>
+            </div>
+        </form>
+        <p class="otp-success-text" *ngIf="otpSuccessText">{{ otpSuccessText }}</p>
     </div>
 </div>
 

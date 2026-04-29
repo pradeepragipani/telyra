@@ -10,6 +10,8 @@ export class GlobalService {
 
     private loggedInUser$ = new BehaviorSubject<any>(null);
     loggedInUserObservable: Observable<any> = this.loggedInUser$.asObservable();
+    private masterData$ = new BehaviorSubject<any>(null);
+    masterDataObs: Observable<any> = this.masterData$.asObservable();
     private cartItems$: BehaviorSubject<any[]> = new BehaviorSubject<any[]>([]);
     cartItemsObservable: Observable<any[]> = this.cartItems$.asObservable();
     private categorySubject$ = new BehaviorSubject<any>(null);
@@ -28,6 +30,7 @@ export class GlobalService {
             this.cartItems$.next(cartItems);
         }
         this.getCategoryData();
+        this.getAppMasterData();
     }
 
     userLogin(user: any) {
@@ -102,6 +105,17 @@ export class GlobalService {
                 }
             });
         }
+    }
+
+    public getAppMasterData() {
+        this.apiService.postData('getAppMasterData', { cstatus: '0' }).subscribe((res: any) => {
+            if (res.code === 0) {
+                this.masterData$.next(res.data);
+                return res.data;
+            } else {
+                return undefined;
+            }
+        });
     }
 
     success(msg: string, header?: string): void {

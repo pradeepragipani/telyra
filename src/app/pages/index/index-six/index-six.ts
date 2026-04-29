@@ -3,7 +3,6 @@ import { ChangeDetectorRef, Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { NavbarOne } from "../../../components/navbar/navbar-one/navbar-one";
 import Aos from 'aos';
-import { servicesData } from '../../../data/index-three';
 import { productList } from '../../../data/data';
 import { BlogSix } from "../../../components/blogs/blog-six/blog-six";
 import { PartnerOne } from "../../../components/partner/partner-one/partner-one";
@@ -38,7 +37,36 @@ interface ProductList {
 })
 export class IndexSix {
 
-  servicesData = servicesData
+  servicesData = [
+    {
+      image: '/assets/img/custom/create-icon1.png',
+      image2: '/assets/img/svg/services/services-light-1.svg',
+      title: 'Set Up Your Account',
+      product: 'Get in touch with our team to setup your account.',
+      desc: ''
+    },
+    {
+      image: '/assets/img/custom/create-icon2.png',
+      image2: '/assets/img/svg/services/services-light-2.svg',
+      title: 'Account Verification',
+      product: 'Validate your contact number and email to confirm your identity.',
+      desc: ''
+    },
+    {
+      image: '/assets/img/custom/create-icon3.png',
+      image2: '/assets/img/svg/services/services-light-3.svg',
+      title: 'Upload Images',
+      product: 'Access the Admin to upload your creative art work with few clicks.',
+      desc: ''
+    },
+    {
+      image: '/assets/img/custom/create-icon4.png',
+      image2: '/assets/img/svg/services/services-light-4.svg',
+      title: 'List items for sale',
+      product: 'Configure reasonable price for your art work and make them available for the customers.',
+      desc: ''
+    },
+  ];
   productList: ProductList[] = productList
 
   tendingArtwork: any[] = [];

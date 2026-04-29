@@ -1,4 +1,4 @@
 export const environment = {
   production: false,
-  apiUrl: 'https://api.telyra.digital/telyra'
+  apiUrl: 'https://api.chedan.digital/chedan'
 };

@@ -1,12 +1,12 @@
  <div class="s-pt-100 2xl:pb-[100px]">
     <div class="container max-w-auto mx-auto">
         <div class="flex flex-col 2xl:flex-row items-start justify-between gap-10">
-            <div class="max-w-[500px] 2xl:max-w-[500px] w-full text-left sm:text-center 2xl:text-left sm:mx-auto 2xl:mx-0">
+            <div class="max-w-[500px] 2xl:max-w-[500px] w-full text-left sm:text-center 2xl:text-left sm:mx-auto 2xl:mx-0" *ngIf="apiData">
                 <h4 class="leading-none mb-5 md:mb-6 text-xl">{{apiData.companyname}}</h4>
                 <p class="mt-[15px]" [innerHTML]="apiData.address"></p>
                 <p class="mt-[15px]">Mobile: {{apiData.contactnumber}}</p>
                 <p class="mt-[15px]">Email: {{apiData.emailid}}</p>
-                <p class="mt-[15px]">© {{year}} Telyra.</p>
+                <p class="mt-[15px]">© {{year}} Chedan.</p>
             </div>
             <div class="grid grid-cols-1">
                 <div>
@@ -21,7 +21,7 @@
             </div>
         </div>
         <div class="block 2xl:hidden py-5 text-center mt-14">
-            <p>© {{year}} Telyra. All rights reserved.</p>
+            <p>© {{year}} Chedan. All rights reserved.</p>
         </div>
     </div>
 </div>

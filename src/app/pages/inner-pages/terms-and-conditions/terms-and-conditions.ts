@@ -6,6 +6,7 @@ import Aos from 'aos';
 import { FooterOne } from "../../../components/footer/footer-one/footer-one";
 import { ApiService } from '../../../services/api.service';
 import { FormsModule } from '@angular/forms';
+import { GlobalService } from '../../../services/global.service';
 
 @Component({
   selector: 'app-terms-and-conditions',
@@ -28,7 +29,7 @@ export class TermsAndConditions {
   constructor(
     private cdr: ChangeDetectorRef,
     private route: ActivatedRoute,
-    private apiService: ApiService
+    private globalService: GlobalService,
   ) { }
 
   ngOnInit(): void {
@@ -38,23 +39,10 @@ export class TermsAndConditions {
         this.load = params['load'];
       }
     });
-    this.loadApiData();
-  }
-
-  loadApiData(): void {
-    this.isLoading = true;
-    this.apiService.postData('getAppMasterData', {}).subscribe({
-      next: (data) => {
-        window.scrollTo(0, 0);
-        this.isLoading = false;
-        this.apiData = data.data;
+    this.globalService.masterDataObs.subscribe((data: any) => {
+      if (data) {
+        this.apiData = data;
         this.cdr.detectChanges();
-      },
-      error: (error) => {
-        console.error('Error loading API data', error);
-        this.isLoading = false;
-      }, complete: () => {
-        this.isLoading = false;
       }
     });
   }
